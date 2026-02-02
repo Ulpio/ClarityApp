@@ -1,0 +1,792 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FC30AAEF2F305F8500F26286 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC30AAEE2F305F8500F26286 /* WidgetKit.framework */; };
+		FC30AAF12F305F8500F26286 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC30AAF02F305F8500F26286 /* SwiftUI.framework */; };
+		FC30AB022F305F8700F26286 /* ClarityLiveActivityExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FC30AAEC2F305F8500F26286 /* ClarityLiveActivityExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FC30AB002F305F8700F26286 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCC112F72F2D4F6E006D3371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FC30AAEB2F305F8500F26286;
+			remoteInfo = ClarityLiveActivityExtension;
+		};
+		FCC1130F2F2D4F6F006D3371 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCC112F72F2D4F6E006D3371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FCC112FE2F2D4F6E006D3371;
+			remoteInfo = Clarity;
+		};
+		FCC113192F2D4F6F006D3371 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCC112F72F2D4F6E006D3371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FCC112FE2F2D4F6E006D3371;
+			remoteInfo = Clarity;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FC30AB072F305F8700F26286 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				FC30AB022F305F8700F26286 /* ClarityLiveActivityExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		FC30AAEC2F305F8500F26286 /* ClarityLiveActivityExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ClarityLiveActivityExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC30AAEE2F305F8500F26286 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		FC30AAF02F305F8500F26286 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		FCC112FF2F2D4F6E006D3371 /* Clarity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clarity.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCC1130E2F2D4F6F006D3371 /* ClarityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClarityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCC113182F2D4F6F006D3371 /* ClarityUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClarityUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		FC30AAE72F305E9600F26286 /* Exceptions for "Clarity" folder in "Clarity" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = FCC112FE2F2D4F6E006D3371 /* Clarity */;
+		};
+		FC30AB062F305F8700F26286 /* Exceptions for "ClarityLiveActivity" folder in "ClarityLiveActivityExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = FC30AAEB2F305F8500F26286 /* ClarityLiveActivityExtension */;
+		};
+		FC30AB0B2F3060D300F26286 /* Exceptions for "Clarity" folder in "ClarityLiveActivityExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				LiveActivities/StudyActivityAttributes.swift,
+				LiveActivities/StudyLiveActivity.swift,
+				Models/Category.swift,
+				Models/StudyStepSD.swift,
+				Models/StudyTaskSD.swift,
+			);
+			target = FC30AAEB2F305F8500F26286 /* ClarityLiveActivityExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		FC30AAF22F305F8500F26286 /* ClarityLiveActivity */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				FC30AB062F305F8700F26286 /* Exceptions for "ClarityLiveActivity" folder in "ClarityLiveActivityExtension" target */,
+			);
+			path = ClarityLiveActivity;
+			sourceTree = "<group>";
+		};
+		FCC113012F2D4F6E006D3371 /* Clarity */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				FC30AAE72F305E9600F26286 /* Exceptions for "Clarity" folder in "Clarity" target */,
+				FC30AB0B2F3060D300F26286 /* Exceptions for "Clarity" folder in "ClarityLiveActivityExtension" target */,
+			);
+			path = Clarity;
+			sourceTree = "<group>";
+		};
+		FCC113112F2D4F6F006D3371 /* ClarityTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ClarityTests;
+			sourceTree = "<group>";
+		};
+		FCC1131B2F2D4F6F006D3371 /* ClarityUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ClarityUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FC30AAE92F305F8500F26286 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FC30AAF12F305F8500F26286 /* SwiftUI.framework in Frameworks */,
+				FC30AAEF2F305F8500F26286 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCC112FC2F2D4F6E006D3371 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCC1130B2F2D4F6F006D3371 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCC113152F2D4F6F006D3371 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FC30AAED2F305F8500F26286 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FC30AAEE2F305F8500F26286 /* WidgetKit.framework */,
+				FC30AAF02F305F8500F26286 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FCC112F62F2D4F6E006D3371 = {
+			isa = PBXGroup;
+			children = (
+				FCC113012F2D4F6E006D3371 /* Clarity */,
+				FCC113112F2D4F6F006D3371 /* ClarityTests */,
+				FCC1131B2F2D4F6F006D3371 /* ClarityUITests */,
+				FC30AAF22F305F8500F26286 /* ClarityLiveActivity */,
+				FC30AAED2F305F8500F26286 /* Frameworks */,
+				FCC113002F2D4F6E006D3371 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FCC113002F2D4F6E006D3371 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FCC112FF2F2D4F6E006D3371 /* Clarity.app */,
+				FCC1130E2F2D4F6F006D3371 /* ClarityTests.xctest */,
+				FCC113182F2D4F6F006D3371 /* ClarityUITests.xctest */,
+				FC30AAEC2F305F8500F26286 /* ClarityLiveActivityExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FC30AAEB2F305F8500F26286 /* ClarityLiveActivityExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FC30AB032F305F8700F26286 /* Build configuration list for PBXNativeTarget "ClarityLiveActivityExtension" */;
+			buildPhases = (
+				FC30AAE82F305F8500F26286 /* Sources */,
+				FC30AAE92F305F8500F26286 /* Frameworks */,
+				FC30AAEA2F305F8500F26286 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				FC30AAF22F305F8500F26286 /* ClarityLiveActivity */,
+			);
+			name = ClarityLiveActivityExtension;
+			packageProductDependencies = (
+			);
+			productName = ClarityLiveActivityExtension;
+			productReference = FC30AAEC2F305F8500F26286 /* ClarityLiveActivityExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		FCC112FE2F2D4F6E006D3371 /* Clarity */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCC113222F2D4F6F006D3371 /* Build configuration list for PBXNativeTarget "Clarity" */;
+			buildPhases = (
+				FCC112FB2F2D4F6E006D3371 /* Sources */,
+				FCC112FC2F2D4F6E006D3371 /* Frameworks */,
+				FCC112FD2F2D4F6E006D3371 /* Resources */,
+				FC30AB072F305F8700F26286 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FC30AB012F305F8700F26286 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FCC113012F2D4F6E006D3371 /* Clarity */,
+			);
+			name = Clarity;
+			packageProductDependencies = (
+			);
+			productName = Clarity;
+			productReference = FCC112FF2F2D4F6E006D3371 /* Clarity.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FCC1130D2F2D4F6F006D3371 /* ClarityTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCC113252F2D4F6F006D3371 /* Build configuration list for PBXNativeTarget "ClarityTests" */;
+			buildPhases = (
+				FCC1130A2F2D4F6F006D3371 /* Sources */,
+				FCC1130B2F2D4F6F006D3371 /* Frameworks */,
+				FCC1130C2F2D4F6F006D3371 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FCC113102F2D4F6F006D3371 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FCC113112F2D4F6F006D3371 /* ClarityTests */,
+			);
+			name = ClarityTests;
+			packageProductDependencies = (
+			);
+			productName = ClarityTests;
+			productReference = FCC1130E2F2D4F6F006D3371 /* ClarityTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		FCC113172F2D4F6F006D3371 /* ClarityUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCC113282F2D4F6F006D3371 /* Build configuration list for PBXNativeTarget "ClarityUITests" */;
+			buildPhases = (
+				FCC113142F2D4F6F006D3371 /* Sources */,
+				FCC113152F2D4F6F006D3371 /* Frameworks */,
+				FCC113162F2D4F6F006D3371 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FCC1131A2F2D4F6F006D3371 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FCC1131B2F2D4F6F006D3371 /* ClarityUITests */,
+			);
+			name = ClarityUITests;
+			packageProductDependencies = (
+			);
+			productName = ClarityUITests;
+			productReference = FCC113182F2D4F6F006D3371 /* ClarityUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FCC112F72F2D4F6E006D3371 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2620;
+				LastUpgradeCheck = 2620;
+				TargetAttributes = {
+					FC30AAEB2F305F8500F26286 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					FCC112FE2F2D4F6E006D3371 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					FCC1130D2F2D4F6F006D3371 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = FCC112FE2F2D4F6E006D3371;
+					};
+					FCC113172F2D4F6F006D3371 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = FCC112FE2F2D4F6E006D3371;
+					};
+				};
+			};
+			buildConfigurationList = FCC112FA2F2D4F6E006D3371 /* Build configuration list for PBXProject "Clarity" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FCC112F62F2D4F6E006D3371;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = FCC113002F2D4F6E006D3371 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FCC112FE2F2D4F6E006D3371 /* Clarity */,
+				FCC1130D2F2D4F6F006D3371 /* ClarityTests */,
+				FCC113172F2D4F6F006D3371 /* ClarityUITests */,
+				FC30AAEB2F305F8500F26286 /* ClarityLiveActivityExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FC30AAEA2F305F8500F26286 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCC112FD2F2D4F6E006D3371 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCC1130C2F2D4F6F006D3371 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCC113162F2D4F6F006D3371 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FC30AAE82F305F8500F26286 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCC112FB2F2D4F6E006D3371 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCC1130A2F2D4F6F006D3371 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCC113142F2D4F6F006D3371 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FC30AB012F305F8700F26286 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FC30AAEB2F305F8500F26286 /* ClarityLiveActivityExtension */;
+			targetProxy = FC30AB002F305F8700F26286 /* PBXContainerItemProxy */;
+		};
+		FCC113102F2D4F6F006D3371 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FCC112FE2F2D4F6E006D3371 /* Clarity */;
+			targetProxy = FCC1130F2F2D4F6F006D3371 /* PBXContainerItemProxy */;
+		};
+		FCC1131A2F2D4F6F006D3371 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FCC112FE2F2D4F6E006D3371 /* Clarity */;
+			targetProxy = FCC113192F2D4F6F006D3371 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		FC30AB042F305F8700F26286 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FG8BDJ969H;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ClarityLiveActivity/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ClarityLiveActivity;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Ulpio.Clarity.ClarityLiveActivity;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FC30AB052F305F8700F26286 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FG8BDJ969H;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ClarityLiveActivity/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ClarityLiveActivity;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Ulpio.Clarity.ClarityLiveActivity;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FCC113202F2D4F6F006D3371 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		FCC113212F2D4F6F006D3371 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FCC113232F2D4F6F006D3371 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FG8BDJ969H;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Clarity/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Clarity;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Ulpio.Clarity;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FCC113242F2D4F6F006D3371 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FG8BDJ969H;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Clarity/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Clarity;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Ulpio.Clarity;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FCC113262F2D4F6F006D3371 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Ulpio.ClarityTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Clarity.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Clarity";
+			};
+			name = Debug;
+		};
+		FCC113272F2D4F6F006D3371 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Ulpio.ClarityTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Clarity.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Clarity";
+			};
+			name = Release;
+		};
+		FCC113292F2D4F6F006D3371 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Ulpio.ClarityUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Clarity;
+			};
+			name = Debug;
+		};
+		FCC1132A2F2D4F6F006D3371 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Ulpio.ClarityUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Clarity;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FC30AB032F305F8700F26286 /* Build configuration list for PBXNativeTarget "ClarityLiveActivityExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FC30AB042F305F8700F26286 /* Debug */,
+				FC30AB052F305F8700F26286 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCC112FA2F2D4F6E006D3371 /* Build configuration list for PBXProject "Clarity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCC113202F2D4F6F006D3371 /* Debug */,
+				FCC113212F2D4F6F006D3371 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCC113222F2D4F6F006D3371 /* Build configuration list for PBXNativeTarget "Clarity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCC113232F2D4F6F006D3371 /* Debug */,
+				FCC113242F2D4F6F006D3371 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCC113252F2D4F6F006D3371 /* Build configuration list for PBXNativeTarget "ClarityTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCC113262F2D4F6F006D3371 /* Debug */,
+				FCC113272F2D4F6F006D3371 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCC113282F2D4F6F006D3371 /* Build configuration list for PBXNativeTarget "ClarityUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCC113292F2D4F6F006D3371 /* Debug */,
+				FCC1132A2F2D4F6F006D3371 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FCC112F72F2D4F6E006D3371 /* Project object */;
+}
