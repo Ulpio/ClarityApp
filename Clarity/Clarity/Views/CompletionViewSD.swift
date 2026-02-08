@@ -10,6 +10,7 @@ import SwiftUI
 struct CompletionViewSD: View {
     @Environment(\.dismiss) private var dismiss
     let task: StudyTaskSD
+    var onDismissAll: (() -> Void)? = nil
     
     @State private var showConfetti = false
     @State private var showContent = false
@@ -105,6 +106,7 @@ struct CompletionViewSD: View {
                 // Action buttons
                 VStack(spacing: 12) {
                     Button(action: {
+                        onDismissAll?()
                         dismiss()
                     }) {
                         HStack(spacing: 12) {

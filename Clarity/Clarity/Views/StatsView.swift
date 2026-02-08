@@ -131,7 +131,7 @@ struct StatsView: View {
                         
                         if let (category, count) = favoriteCategory {
                             StatsCardCategory(
-                                icon: category.icon,
+                                category: category,
                                 value: category.name,
                                 label: "Categoria favorita",
                                 color: category.color,
@@ -255,24 +255,21 @@ struct StatsView: View {
 // MARK: - Card para categoria favorita
 
 struct StatsCardCategory: View {
-    let icon: String
-    let value: String
-    let label: String
-    let color: Color
+    let category: Category
     let count: Int
     
     var body: some View {
         VStack(spacing: 12) {
-            Image(systemName: icon)
+            CategoryIconView(category: category)
                 .font(.title)
-                .foregroundStyle(color)
+                .foregroundStyle(category.color)
             
-            Text(value)
+            Text(category.name)
                 .font(.system(size: 18, weight: .bold, design: .rounded))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
             
-            Text(label)
+            Text("Categoria favorita")
                 .font(.caption)
                 .foregroundStyle(.secondary)
             
@@ -508,7 +505,7 @@ struct CategoriesBreakdown: View {
             ForEach(categoryStats, id: \.0.id) { category, count in
                 HStack {
                     HStack(spacing: 12) {
-                        Image(systemName: category.icon)
+                        CategoryIconView(category: category)
                             .foregroundStyle(category.color)
                             .frame(width: 24)
                         
@@ -552,7 +549,7 @@ struct RecentTaskRow: View {
             Spacer()
             
             if let category = task.category {
-                Image(systemName: category.icon)
+                CategoryIconView(category: category)
                     .foregroundStyle(category.color)
             }
         }

@@ -12,6 +12,7 @@ struct CreateTaskViewSD: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Category.order) private var categories: [Category]
+    var onCreate: ((StudyTaskSD) -> Void)?
     
     @State private var taskTitle = ""
     @State private var steps: [String] = [""]
@@ -183,7 +184,9 @@ struct CreateTaskViewSD: View {
         )
         
         modelContext.insert(task)
+        try? modelContext.save()
         
+        onCreate?(task)
         dismiss()
     }
 }
@@ -196,7 +199,7 @@ struct CategoryChip: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 8) {
-                Image(systemName: category.icon)
+                CategoryIconView(category: category)
                     .font(.callout)
                 Text(category.name)
                     .font(.subheadline)

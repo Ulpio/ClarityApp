@@ -14,6 +14,8 @@ struct HomeViewSD: View {
     @Query(sort: \Category.order) private var categories: [Category]
     
     @State private var showingCreateTask = false
+    @State private var createdTask: StudyTaskSD?
+    @State private var taskToStart: StudyTaskSD?
     @State private var selectedCategory: Category?
     @State private var showStats = false
     @State private var showTemplates = false
@@ -52,12 +54,21 @@ struct HomeViewSD: View {
                             Button {
                                 selectedCategory = category
                             } label: {
-                                Label(category.name, systemImage: category.icon)
+                                Label {
+                                    Text(category.name)
+                                } icon: {
+                                    CategoryIconView(category: category)
+                                }
                             }
                         }
                     } label: {
                         HStack(spacing: 4) {
-                            Image(systemName: selectedCategory?.icon ?? "line.3.horizontal.decrease.circle")
+                            if let category = selectedCategory {
+                                CategoryIconView(category: category)
+                                    .foregroundStyle(category.color)
+                            } else {
+                                Image(systemName: "line.3.horizontal.decrease.circle")
+                            }
                             if let category = selectedCategory {
                                 Text(category.name)
                                     .font(.subheadline)
@@ -112,7 +123,24 @@ struct HomeViewSD: View {
                 }
             }
             .sheet(isPresented: $showingCreateTask) {
-                CreateTaskViewSD()
+                CreateTaskViewSD(onCreate: { task in
+                    showingCreateTask = false
+                    createdTask = task
+                })
+            }
+            .sheet(item: $createdTask) { task in
+                TaskReadyView(
+                    task: task,
+                    onStart: {
+                        taskToStart = task
+                        createdTask = nil
+                    },
+                    onBack: { createdTask = nil }
+                )
+            }
+            .fullScreenCover(item: $taskToStart) { task in
+                BreatheThenFocusView(task: task, onDismiss: { taskToStart = nil })
+                    .environment(\.modelContext, modelContext)
             }
             .sheet(isPresented: $showStats) {
                 StatsView(tasks: allTasks)
@@ -240,7 +268,7 @@ struct TaskCardSD: View {
                 HStack {
                     if let category = task.category {
                         HStack(spacing: 6) {
-                            Image(systemName: category.icon)
+                            CategoryIconView(category: category)
                                 .font(.caption)
                             Text(category.name)
                                 .font(.caption)

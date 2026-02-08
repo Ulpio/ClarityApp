@@ -17,6 +17,7 @@ struct FocusViewEnhanced: View {
     @Query private var achievements: [Achievement]
     
     let task: StudyTaskSD
+    var onSessionEnd: (() -> Void)? = nil
     @State private var settings: AppSettings?
     @State private var showingCompletion = false
     @State private var stepScale: CGFloat = 0.8
@@ -45,6 +46,7 @@ struct FocusViewEnhanced: View {
     
     // Live Activity
     @State private var liveActivityManager: LiveActivityManager?
+    @State private var showEditSteps = false
     
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -83,7 +85,7 @@ struct FocusViewEnhanced: View {
     var body: some View {
         Group {
             if task.isCompleted {
-                CompletionViewSD(task: task)
+                CompletionViewSD(task: task, onDismissAll: onSessionEnd)
             } else if isPausing {
                 pauseScreen
             } else if let step = currentStep, let index = currentStepIndex {
@@ -107,20 +109,34 @@ struct FocusViewEnhanced: View {
             }
             
             ToolbarItem(placement: .navigationBarTrailing) {
-                Menu {
-                    Toggle("Modo Pomodoro", isOn: $pomodoroMode)
-                        .onChange(of: pomodoroMode) { _, new in
-                            if new {
-                                startPomodoro()
-                            } else {
-                                stopPomodoro()
+                HStack(spacing: 12) {
+                    Button {
+                        showEditSteps = true
+                    } label: {
+                        Image(systemName: "pencil.circle")
+                            .symbolRenderingMode(.hierarchical)
+                    }
+                    .accessibilityLabel("Editar passos da tarefa")
+                    
+                    Menu {
+                        Toggle("Modo Pomodoro", isOn: $pomodoroMode)
+                            .onChange(of: pomodoroMode) { _, new in
+                                if new {
+                                    startPomodoro()
+                                } else {
+                                    stopPomodoro()
+                                }
                             }
-                        }
-                } label: {
-                    Image(systemName: pomodoroMode ? "timer.circle.fill" : "timer.circle")
-                        .symbolRenderingMode(.hierarchical)
+                    } label: {
+                        Image(systemName: pomodoroMode ? "timer.circle.fill" : "timer.circle")
+                            .symbolRenderingMode(.hierarchical)
+                    }
                 }
             }
+        }
+        .sheet(isPresented: $showEditSteps) {
+            EditTaskStepsView(task: task)
+                .environment(\.modelContext, modelContext)
         }
         .onAppear {
             loadSettings()

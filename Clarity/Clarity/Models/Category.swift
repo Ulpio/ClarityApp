@@ -16,30 +16,61 @@ final class Category {
     var icon: String
     var colorHex: String
     var order: Int
+    var isSystemCategory: Bool
     
     @Relationship(deleteRule: .nullify, inverse: \StudyTaskSD.category)
     var tasks: [StudyTaskSD]?
     
-    init(id: UUID = UUID(), name: String, icon: String, colorHex: String, order: Int = 0) {
+    init(id: UUID = UUID(), name: String, icon: String, colorHex: String, order: Int = 0, isSystemCategory: Bool = false) {
         self.id = id
         self.name = name
         self.icon = icon
         self.colorHex = colorHex
         self.order = order
+        self.isSystemCategory = isSystemCategory
     }
     
     var color: Color {
         Color(hex: colorHex) ?? .blue
     }
     
-    // Categorias padrão
+    /// True se o ícone for emoji (exibido como texto); caso contrário é nome de SF Symbol.
+    var isEmojiIcon: Bool {
+        !icon.isEmpty && icon.count <= 4 && icon.allSatisfy { $0.isEmoji }
+    }
+    
+    // Categorias padrão (não podem ser excluídas)
     static let defaultCategories: [Category] = [
-        Category(name: "Estudos", icon: "book.fill", colorHex: "5B9FED", order: 0),
-        Category(name: "Trabalho", icon: "briefcase.fill", colorHex: "F59E0B", order: 1),
-        Category(name: "Saúde", icon: "heart.fill", colorHex: "10B981", order: 2),
-        Category(name: "Pessoal", icon: "person.fill", colorHex: "A78BFA", order: 3),
-        Category(name: "Casa", icon: "house.fill", colorHex: "EC4899", order: 4),
-        Category(name: "Criativo", icon: "paintbrush.fill", colorHex: "8B5CF6", order: 5)
+        Category(name: "Estudos", icon: "book.fill", colorHex: "5B9FED", order: 0, isSystemCategory: true),
+        Category(name: "Trabalho", icon: "briefcase.fill", colorHex: "F59E0B", order: 1, isSystemCategory: true),
+        Category(name: "Saúde", icon: "heart.fill", colorHex: "10B981", order: 2, isSystemCategory: true),
+        Category(name: "Pessoal", icon: "person.fill", colorHex: "A78BFA", order: 3, isSystemCategory: true),
+        Category(name: "Casa", icon: "house.fill", colorHex: "EC4899", order: 4, isSystemCategory: true),
+        Category(name: "Criativo", icon: "paintbrush.fill", colorHex: "8B5CF6", order: 5, isSystemCategory: true)
+    ]
+    
+    /// Cores disponíveis para categorias personalizadas
+    static let presetColors: [(name: String, hex: String)] = [
+        ("Azul", "5B9FED"),
+        ("Laranja", "F59E0B"),
+        ("Verde", "10B981"),
+        ("Roxo", "A78BFA"),
+        ("Rosa", "EC4899"),
+        ("Índigo", "8B5CF6"),
+        ("Vermelho", "EF4444"),
+        ("Âmbar", "F59E0B"),
+        ("Teal", "14B8A6"),
+        ("Ciano", "06B6D4")
+    ]
+    
+    /// Nomes das categorias padrão (para migração e detecção)
+    static let defaultCategoryNames: Set<String> = ["Estudos", "Trabalho", "Saúde", "Pessoal", "Casa", "Criativo"]
+    
+    /// Símbolos SF comuns para escolha rápida
+    static let presetSymbols: [String] = [
+        "book.fill", "briefcase.fill", "heart.fill", "person.fill", "house.fill",
+        "paintbrush.fill", "star.fill", "flag.fill", "leaf.fill", "flame.fill",
+        "drop.fill", "bolt.fill", "graduationcap.fill", "dumbbell.fill", "cart.fill"
     ]
 }
 

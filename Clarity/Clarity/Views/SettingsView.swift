@@ -106,6 +106,20 @@ struct SettingsView: View {
                     Text("Controle quais elementos você pode pular durante o estudo.")
                 }
                 
+                // Categorias
+                Section {
+                    NavigationLink {
+                        ManageCategoriesView()
+                            .environment(\.modelContext, modelContext)
+                    } label: {
+                        Label("Categorias", systemImage: "folder.fill")
+                    }
+                } header: {
+                    Text("Categorias")
+                } footer: {
+                    Text("Crie categorias personalizadas com emojis ou símbolos.")
+                }
+                
                 // Statistics
                 Section {
                     if let settings = settings {

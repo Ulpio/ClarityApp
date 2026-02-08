@@ -33,6 +33,11 @@ struct Clarity: App {
                 for category in Category.defaultCategories {
                     context.insert(category)
                 }
+            } else {
+                // Migração: marcar categorias padrão existentes como sistema
+                for category in existingCategories ?? [] where Category.defaultCategoryNames.contains(category.name) {
+                    category.isSystemCategory = true
+                }
             }
             
             // Inicializar conquistas
