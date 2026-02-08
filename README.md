@@ -80,10 +80,10 @@ Clarity/
 
 ---
 
-## Documentação adicional
+## Documentação
 
-- **[Clarity/README.md](Clarity/Clarity/README.md)** — Visão geral do app, público-alvo e filosofia.
-- **[DECISOES_DESIGN.md](DECISOES_DESIGN.md)** — Decisões de design e anti-burla.
+- **[Clarity/README.md](Clarity/Clarity/README.md)** — Visão geral do app, público-alvo e telas.
+- **[ROADMAP.md](ROADMAP.md)** — Mapeamento das funcionalidades atuais e roadmap das próximas.
 
 ---
 

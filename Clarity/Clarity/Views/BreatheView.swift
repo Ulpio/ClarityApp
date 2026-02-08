@@ -16,7 +16,7 @@ struct BreatheView: View {
     let onSkip: (() -> Void)?
     
     @State private var isAnimating = false
-    @State private var scale: CGFloat = 0.8
+    @State private var scale: CGFloat = 0.85
     @State private var phase: BreathePhase = .inhale
     @State private var secondsRemaining = 30
     @State private var showSkipConfirmation = false
@@ -56,10 +56,10 @@ struct BreatheView: View {
         
         var targetScale: CGFloat {
             switch self {
-            case .inhale: return 1.2
-            case .hold: return 1.2
-            case .exhale: return 0.8
-            case .rest: return 0.8
+            case .inhale: return 1.15
+            case .hold: return 1.15
+            case .exhale: return 0.85
+            case .rest: return 0.85
             }
         }
         
@@ -94,36 +94,37 @@ struct BreatheView: View {
                 
                 Spacer()
                 
-                // Breathing circle
+                // Breathing circle (tamanho contido para caber bem na tela)
+                let circleSize: CGFloat = 160
                 ZStack {
-                    // Outer rings
+                    // Anéis externos (proporcionais ao círculo principal)
                     ForEach(0..<3) { index in
                         Circle()
-                            .stroke(Color.accentColor.opacity(0.3 - Double(index) * 0.1), lineWidth: 2)
-                            .frame(width: 200 + CGFloat(index * 40), height: 200 + CGFloat(index * 40))
-                            .scaleEffect(isAnimating ? 1.1 : 1.0)
-                            .opacity(isAnimating ? 0 : 0.8)
+                            .stroke(Color.accentColor.opacity(0.35 - Double(index) * 0.1), lineWidth: 2)
+                            .frame(width: circleSize + CGFloat(index * 24), height: circleSize + CGFloat(index * 24))
+                            .scaleEffect(isAnimating ? 1.08 : 1.0)
+                            .opacity(isAnimating ? 0 : 0.7)
                             .animation(
                                 .easeInOut(duration: animationDuration)
                                 .repeatForever(autoreverses: false)
-                                .delay(Double(index) * 0.3),
+                                .delay(Double(index) * 0.25),
                                 value: isAnimating
                             )
                     }
                     
-                    // Main circle
+                    // Círculo principal
                     Circle()
                         .fill(Color.accentColor.opacity(0.15))
-                        .frame(width: 200, height: 200)
+                        .frame(width: circleSize, height: circleSize)
                         .scaleEffect(scale)
                         .overlay(
                             Circle()
-                                .stroke(Color.accentColor, lineWidth: 4)
+                                .stroke(Color.accentColor, lineWidth: 3)
                         )
                     
-                    // Phase icon
+                    // Ícone da fase
                     Image(systemName: phase.icon)
-                        .font(.system(size: 48))
+                        .font(.system(size: 40))
                         .symbolRenderingMode(.hierarchical)
                         .foregroundStyle(.tint)
                 }

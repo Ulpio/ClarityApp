@@ -68,3 +68,5 @@ final class StudyTaskSD {
         completedAt = Date()
     }
 }
+
+extension StudyTaskSD: Identifiable { }
