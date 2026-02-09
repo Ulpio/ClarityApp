@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftData
-import SwiftUI
 
 @Model
 final class StudyTaskSD {
@@ -69,4 +68,3 @@ final class StudyTaskSD {
     }
 }
 
-extension StudyTaskSD: Identifiable { }

@@ -36,7 +36,7 @@ final class Category {
     
     /// True se o ícone for emoji (exibido como texto); caso contrário é nome de SF Symbol.
     var isEmojiIcon: Bool {
-        !icon.isEmpty && icon.count <= 4 && icon.allSatisfy { $0.isEmoji }
+        !icon.isEmpty && icon.count <= 4 && icon.allSatisfy { $0.cl_isEmoji }
     }
     
     // Categorias padrão (não podem ser excluídas)
@@ -49,7 +49,7 @@ final class Category {
         Category(name: "Criativo", icon: "paintbrush.fill", colorHex: "8B5CF6", order: 5, isSystemCategory: true)
     ]
     
-    /// Cores disponíveis para categorias personalizadas
+    /// Cores disponíveis para categorias personalizadas (nome único para uso como id em ForEach)
     static let presetColors: [(name: String, hex: String)] = [
         ("Azul", "5B9FED"),
         ("Laranja", "F59E0B"),
@@ -58,7 +58,6 @@ final class Category {
         ("Rosa", "EC4899"),
         ("Índigo", "8B5CF6"),
         ("Vermelho", "EF4444"),
-        ("Âmbar", "F59E0B"),
         ("Teal", "14B8A6"),
         ("Ciano", "06B6D4")
     ]
@@ -72,6 +71,32 @@ final class Category {
         "paintbrush.fill", "star.fill", "flag.fill", "leaf.fill", "flame.fill",
         "drop.fill", "bolt.fill", "graduationcap.fill", "dumbbell.fill", "cart.fill"
     ]
+}
+
+// MARK: - Emoji detection
+private extension Character {
+    // Heuristic to detect if a Character is an emoji.
+    // Checks if any unicode scalar has the Emoji property and accounts for keycaps/variation selectors.
+    var cl_isEmoji: Bool {
+        // If the character is a single scalar and that scalar is an emoji, it's emoji.
+        if let first = unicodeScalars.first, unicodeScalars.count == 1 {
+            // Many emoji scalars are marked as `properties.isEmoji`
+            if first.properties.isEmoji { return true }
+        }
+        // For composed sequences (e.g., flags, skin tones, family), if any scalar is emoji and
+        // the character renders as a single extended grapheme cluster with presentation width > 1,
+        // consider it an emoji. The width check isn't accessible here, so rely on scalar properties.
+        // Common scalars involved in emoji sequences include zero-width joiner, variation selectors, and regional indicators.
+        let hasEmojiScalar = unicodeScalars.contains { $0.properties.isEmoji }
+        if hasEmojiScalar { return true }
+        
+        // Keycap sequences like 1️⃣ are formed with base [0-9#*] + variation selector + keycap combining mark
+        // Those bases aren't emoji by themselves; detect the keycap combining scalar.
+        let keycapScalar: UnicodeScalar = "\u{20E3}"
+        if unicodeScalars.contains(keycapScalar) { return true }
+        
+        return false
+    }
 }
 
 // Extension para converter hex em Color
@@ -111,13 +136,7 @@ extension Color {
 
         if cgColor == nil {
             // Resolve the SwiftUI Color to concrete RGBA components and build a UIColor
-            let resolved: Color.Resolved
-            if #available(iOS 17.0, *) {
-                resolved = self.resolve(in: .init())
-            } else {
-                // For older OS versions, attempt to use a neutral environment
-                resolved = self.resolve(in: .init())
-            }
+            let resolved = self.resolve(in: .init())
             let uiColor = UIColor(red: CGFloat(resolved.red),
                                   green: CGFloat(resolved.green),
                                   blue: CGFloat(resolved.blue),

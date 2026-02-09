@@ -33,7 +33,7 @@ struct StatsView: View {
     }
     
     private var currentStreak: Int {
-        calculateStreak()
+        StreakCalculator.streak(from: completedTasks)
     }
     
     /// Total de passos pulados (global)
@@ -132,9 +132,6 @@ struct StatsView: View {
                         if let (category, count) = favoriteCategory {
                             StatsCardCategory(
                                 category: category,
-                                value: category.name,
-                                label: "Categoria favorita",
-                                color: category.color,
                                 count: count
                             )
                         } else {
@@ -199,7 +196,7 @@ struct StatsView: View {
                                 .fontWeight(.bold)
                                 .padding(.horizontal)
                             
-                            ForEach(completedTasks.prefix(5)) { task in
+                            ForEach(completedTasks.prefix(5), id: \.id) { task in
                                 RecentTaskRow(task: task)
                             }
                             .padding(.horizontal)
@@ -218,29 +215,6 @@ struct StatsView: View {
                 }
             }
         }
-    }
-    
-    private func calculateStreak() -> Int {
-        let calendar = Calendar.current
-        let completedDates = completedTasks.compactMap { $0.completedAt }
-            .map { calendar.startOfDay(for: $0) }
-            .sorted(by: >)
-        
-        guard !completedDates.isEmpty else { return 0 }
-        
-        var streak = 0
-        var currentDate = calendar.startOfDay(for: Date())
-        
-        for date in completedDates {
-            if calendar.isDate(date, inSameDayAs: currentDate) {
-                streak += 1
-                currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate)!
-            } else if date < currentDate {
-                break
-            }
-        }
-        
-        return streak
     }
     
     private func formatFocusTime(_ minutes: Int) -> String {

@@ -13,12 +13,17 @@ struct EditTaskStepsView: View {
     @Environment(\.modelContext) private var modelContext
     let task: StudyTaskSD
     
+    /// Passos ordenados por `order` para exibição consistente
+    private var sortedSteps: [StudyStepSD] {
+        task.steps.sorted { $0.order < $1.order }
+    }
+    
     var body: some View {
         NavigationStack {
             List {
                 Section {
-                    ForEach(Array(task.steps.enumerated()), id: \.element.id) { index, step in
-                        EditStepRow(step: step, stepNumber: index + 1, canDelete: task.steps.count > 1) {
+                    ForEach(Array(sortedSteps.enumerated()), id: \.element.id) { index, step in
+                        EditStepRow(step: step, stepNumber: index + 1, canDelete: sortedSteps.count > 1) {
                             deleteStep(step)
                         }
                     }

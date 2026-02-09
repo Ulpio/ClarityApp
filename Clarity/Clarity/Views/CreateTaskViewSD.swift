@@ -15,14 +15,14 @@ struct CreateTaskViewSD: View {
     var onCreate: ((StudyTaskSD) -> Void)?
     
     @State private var taskTitle = ""
-    @State private var steps: [String] = [""]
-    @State private var stepTimes: [Int] = [0] // Tempo estimado em minutos
+    /// Passos com id estável para evitar crash ao remover (ForEach não usa índice como id).
+    @State private var stepRows: [CreateStepRowState] = [CreateStepRowState(id: UUID(), text: "", estimatedMinutes: 0)]
     @State private var selectedCategory: Category?
     @FocusState private var focusedField: Int?
-    
+
     private var isValid: Bool {
         !taskTitle.trimmingCharacters(in: .whitespaces).isEmpty &&
-        steps.contains { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
+        stepRows.contains { !$0.text.trimmingCharacters(in: .whitespaces).isEmpty }
     }
     
     var body: some View {
@@ -109,29 +109,18 @@ struct CreateTaskViewSD: View {
             }
             
             VStack(spacing: 12) {
-                ForEach(steps.indices, id: \.self) { index in
-                    StepRowWithTime(
-                        number: index + 1,
-                        text: $steps[index],
-                        estimatedMinutes: $stepTimes[index],
-                        canDelete: steps.count > 1,
-                        isFocused: focusedField == index,
-                        onFocus: { focusedField = index },
-                        onSubmit: {
-                            if index == steps.count - 1 {
-                                addStep()
-                            } else {
-                                focusedField = index + 1
-                            }
-                        },
-                        onDelete: {
-                            removeStep(at: index)
-                        }
+                ForEach(stepRows) { row in
+                    CreateStepRowWrapper(
+                        stepRows: $stepRows,
+                        rowId: row.id,
+                        stepRowsCount: stepRows.count,
+                        focusedField: $focusedField,
+                        onAddStep: addStep,
+                        onRemoveStep: removeStep
                     )
-                    .focused($focusedField, equals: index)
                 }
             }
-            
+
             Button {
                 addStep()
             } label: {
@@ -148,32 +137,33 @@ struct CreateTaskViewSD: View {
     
     private func addStep() {
         withAnimation {
-            steps.append("")
-            stepTimes.append(0)
-            focusedField = steps.count - 1
+            stepRows.append(CreateStepRowState(id: UUID(), text: "", estimatedMinutes: 0))
+            focusedField = stepRows.count - 1
         }
     }
-    
-    private func removeStep(at index: Int) {
+
+    private func removeStep(id: UUID) {
+        guard let removedIndex = stepRows.firstIndex(where: { $0.id == id }) else { return }
         withAnimation {
-            steps.remove(at: index)
-            stepTimes.remove(at: index)
-            if focusedField == index {
+            stepRows.removeAll { $0.id == id }
+            if focusedField == removedIndex {
                 focusedField = nil
+            } else if let f = focusedField, f > removedIndex {
+                focusedField = max(0, f - 1)
             }
         }
     }
-    
+
     private func createTask() {
-        let validSteps = zip(steps, stepTimes)
-            .map { (desc, time) in (desc.trimmingCharacters(in: .whitespaces), time) }
-            .filter { !$0.0.isEmpty }
+        let validSteps = stepRows
+            .map { (text: $0.text.trimmingCharacters(in: .whitespaces), minutes: $0.estimatedMinutes) }
+            .filter { !$0.text.isEmpty }
             .enumerated()
             .map { index, stepData in
                 StudyStepSD(
-                    description: stepData.0,
+                    description: stepData.text,
                     order: index,
-                    estimatedMinutes: stepData.1
+                    estimatedMinutes: stepData.minutes
                 )
             }
         
@@ -188,6 +178,80 @@ struct CreateTaskViewSD: View {
         
         onCreate?(task)
         dismiss()
+    }
+}
+
+private struct CreateStepRowState: Identifiable {
+    var id: UUID
+    var text: String
+    var estimatedMinutes: Int
+}
+
+/// Wrapper que cria bindings por id (nunca por índice), evitando crash ao remover um passo.
+private struct CreateStepRowWrapper: View {
+    @Binding var stepRows: [CreateStepRowState]
+    let rowId: UUID
+    let stepRowsCount: Int
+    @FocusState.Binding var focusedField: Int?
+    let onAddStep: () -> Void
+    let onRemoveStep: (UUID) -> Void
+
+    private var index: Int? {
+        stepRows.firstIndex(where: { $0.id == rowId })
+    }
+
+    private var textBinding: Binding<String> {
+        Binding(
+            get: {
+                guard let i = stepRows.firstIndex(where: { $0.id == rowId }) else { return "" }
+                return stepRows[i].text
+            },
+            set: { newValue in
+                var arr = stepRows
+                guard let i = arr.firstIndex(where: { $0.id == rowId }) else { return }
+                arr[i].text = newValue
+                stepRows = arr
+            }
+        )
+    }
+
+    private var minutesBinding: Binding<Int> {
+        Binding(
+            get: {
+                guard let i = stepRows.firstIndex(where: { $0.id == rowId }) else { return 0 }
+                return stepRows[i].estimatedMinutes
+            },
+            set: { newValue in
+                var arr = stepRows
+                guard let i = arr.firstIndex(where: { $0.id == rowId }) else { return }
+                arr[i].estimatedMinutes = newValue
+                stepRows = arr
+            }
+        )
+    }
+
+    var body: some View {
+        if let idx = index {
+            StepRowWithTime(
+                number: idx + 1,
+                text: textBinding,
+                estimatedMinutes: minutesBinding,
+                canDelete: stepRowsCount > 1,
+                isFocused: focusedField == idx,
+                onFocus: { focusedField = idx },
+                onSubmit: {
+                    if idx == stepRowsCount - 1 {
+                        onAddStep()
+                    } else {
+                        focusedField = idx + 1
+                    }
+                },
+                onDelete: { onRemoveStep(rowId) }
+            )
+            .focused($focusedField, equals: idx)
+        } else {
+            EmptyView()
+        }
     }
 }
 
@@ -336,7 +400,10 @@ struct StepRowWithTime: View {
 
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Category.self, configurations: config)
+    let container = try! ModelContainer(
+        for: StudyTaskSD.self, StudyStepSD.self, Category.self,
+        configurations: config
+    )
     
     let context = container.mainContext
     for category in Category.defaultCategories {

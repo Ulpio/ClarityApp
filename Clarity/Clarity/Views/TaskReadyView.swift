@@ -10,10 +10,13 @@ import SwiftData
 
 struct TaskReadyView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     let task: StudyTaskSD
     var onStart: () -> Void
     var onBack: () -> Void
-    
+
+    @State private var showEditTask = false
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -34,6 +37,19 @@ struct TaskReadyView: View {
                         dismiss()
                     }
                 }
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showEditTask = true
+                    } label: {
+                        Image(systemName: "pencil.circle")
+                            .symbolRenderingMode(.hierarchical)
+                    }
+                    .accessibilityLabel("Editar tarefa")
+                }
+            }
+            .sheet(isPresented: $showEditTask) {
+                EditTaskView(task: task)
+                    .environment(\.modelContext, modelContext)
             }
         }
     }
@@ -115,15 +131,6 @@ struct TaskReadyView: View {
                 .clipShape(Capsule())
             }
             .accessibilityLabel("Iniciar tarefa")
-            
-            Button {
-                onBack()
-                dismiss()
-            } label: {
-                Text("Voltar à lista")
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
-            }
         }
         .padding(.top, 8)
     }

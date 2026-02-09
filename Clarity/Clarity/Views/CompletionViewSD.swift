@@ -40,8 +40,7 @@ struct CompletionViewSD: View {
                     // Animated circles
                     ForEach(0..<3) { index in
                         Circle()
-                            .stroke(lineWidth: 2)
-                            .fill(Color.green.opacity(0.3))
+                            .stroke(Color.green.opacity(0.3), lineWidth: 2)
                             .frame(width: 120 + CGFloat(index * 40), height: 120 + CGFloat(index * 40))
                             .scaleEffect(showContent ? 1 : 0)
                             .opacity(showContent ? 0 : 1)
