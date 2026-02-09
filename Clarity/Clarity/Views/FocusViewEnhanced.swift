@@ -11,12 +11,22 @@ import Combine
 import ActivityKit
 
 struct FocusViewEnhanced: View {
+    private enum Constants {
+        static let defaultMinimumStepDurationSeconds = 15
+        static let minimumRequiredFraction = 0.6
+        static let achievementToastDelaySeconds: Double = 1.5
+        static let achievementToastDisplaySeconds: Double = 5
+        static let honestyMessageRotationIntervalSeconds = 15
+    }
+
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Query private var allTasks: [StudyTaskSD]
     @Query private var achievements: [Achievement]
-    
+
     let task: StudyTaskSD
+    /// Quando true, a respiração já foi feita em BreatheThenFocusView; não mostrar BreatheView de novo.
+    var breathingAlreadyDone: Bool = false
     var onSessionEnd: (() -> Void)? = nil
     @State private var settings: AppSettings?
     @State private var showingCompletion = false
@@ -33,13 +43,9 @@ struct FocusViewEnhanced: View {
     @State private var canComplete: Bool = false
     @State private var showConfirmation = false
     @State private var showSkipConfirmation = false
+    @State private var showStopConfirmation = false
     @State private var isPausing = false
-    
-    // Pomodoro
-    @State private var pomodoroMode: Bool = false
-    @State private var pomodoroTimeRemaining: Int = 0
-    @State private var pomodoroRunning: Bool = false
-    
+
     // Mensagens motivacionais
     @State private var currentMessageIndex: Int = 0
     @State private var messageOpacity: Double = 1.0
@@ -64,7 +70,7 @@ struct FocusViewEnhanced: View {
         if let step = currentStep, step.estimatedMinutes > 0 {
             return step.minimumRequiredSeconds
         }
-        return settings?.minimumStepDuration ?? 15
+        return settings?.minimumStepDuration ?? Constants.defaultMinimumStepDurationSeconds
     }
     
     private var totalEstimatedDuration: Int? {
@@ -96,6 +102,16 @@ struct FocusViewEnhanced: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    showStopConfirmation = true
+                } label: {
+                    Label("Parar", systemImage: "stop.circle")
+                        .symbolRenderingMode(.hierarchical)
+                }
+                .accessibilityLabel("Parar tarefa e voltar")
+            }
+
             ToolbarItem(placement: .principal) {
                 VStack(spacing: 2) {
                     Text(task.title)
@@ -109,29 +125,13 @@ struct FocusViewEnhanced: View {
             }
             
             ToolbarItem(placement: .navigationBarTrailing) {
-                HStack(spacing: 12) {
-                    Button {
-                        showEditSteps = true
-                    } label: {
-                        Image(systemName: "pencil.circle")
-                            .symbolRenderingMode(.hierarchical)
-                    }
-                    .accessibilityLabel("Editar passos da tarefa")
-                    
-                    Menu {
-                        Toggle("Modo Pomodoro", isOn: $pomodoroMode)
-                            .onChange(of: pomodoroMode) { _, new in
-                                if new {
-                                    startPomodoro()
-                                } else {
-                                    stopPomodoro()
-                                }
-                            }
-                    } label: {
-                        Image(systemName: pomodoroMode ? "timer.circle.fill" : "timer.circle")
-                            .symbolRenderingMode(.hierarchical)
-                    }
+                Button {
+                    showEditSteps = true
+                } label: {
+                    Image(systemName: "pencil.circle")
+                        .symbolRenderingMode(.hierarchical)
                 }
+                .accessibilityLabel("Editar passos da tarefa")
             }
         }
         .sheet(isPresented: $showEditSteps) {
@@ -146,7 +146,9 @@ struct FocusViewEnhanced: View {
                 liveActivityManager = LiveActivityManager.shared
             }
             
-            if !breatheCompleted && !task.isCompleted {
+            if breathingAlreadyDone {
+                startStep()
+            } else if !breatheCompleted && !task.isCompleted {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     showBreathe = true
                 }
@@ -179,6 +181,15 @@ struct FocusViewEnhanced: View {
             )
             .environment(\.modelContext, modelContext)
         }
+        .confirmationDialog("Parar tarefa?", isPresented: $showStopConfirmation, titleVisibility: .visible) {
+            Button("Cancelar", role: .cancel) { }
+            Button("Parar sem concluir", role: .destructive) {
+                onSessionEnd?()
+                dismiss()
+            }
+        } message: {
+            Text("A sessão será interrompida e a tarefa não será marcada como concluída.")
+        }
         .alert("Você completou este passo?", isPresented: $showConfirmation) {
             Button("Ainda não", role: .cancel) { }
             Button("Sim, completei!") {
@@ -208,7 +219,7 @@ struct FocusViewEnhanced: View {
                         let generator = UINotificationFeedbackGenerator()
                         generator.notificationOccurred(.success)
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + Constants.achievementToastDisplaySeconds) {
                             dismissAchievement()
                         }
                     }
@@ -232,33 +243,7 @@ struct FocusViewEnhanced: View {
             }
             
             Spacer()
-            
-                // Pomodoro timer (if active)
-            if pomodoroMode && pomodoroRunning {
-                VStack(spacing: 12) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "timer")
-                            .foregroundStyle(.orange)
-                        Text(formatPomodoroTime(pomodoroTimeRemaining))
-                            .font(.title3)
-                            .fontWeight(.medium)
-                            .monospacedDigit()
-                            .foregroundStyle(.orange)
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 10)
-                    .background(
-                        Capsule()
-                            .fill(Color(.tertiarySystemGroupedBackground))
-                    )
-                    
-                    ProgressView(value: Double(pomodoroTimeRemaining), total: Double((settings?.pomodoroDuration ?? 25) * 60))
-                        .tint(.orange)
-                        .frame(width: 200)
-                }
-                .padding(.bottom, 24)
-            }
-            
+
             // Step display with time info
             VStack(spacing: 32) {
                 ZStack {
@@ -373,11 +358,11 @@ struct FocusViewEnhanced: View {
                                             height: 6
                                         )
                                     
-                                    // Minimum required marker (60%)
+                                    // Minimum required marker (60% do tempo)
                                     Rectangle()
                                         .fill(canComplete ? Color.green : Color.orange)
                                         .frame(width: 3, height: 12)
-                                        .offset(x: geometry.size.width * 0.6)
+                                        .offset(x: geometry.size.width * Constants.minimumRequiredFraction)
                                 }
                             }
                             .frame(height: 12)
@@ -584,18 +569,11 @@ struct FocusViewEnhanced: View {
                 )
             }
             
-            // Rotacionar mensagem motivacional a cada 15 segundos
-            if settings?.showHonestyReminders == true && elapsedSeconds > 0 && elapsedSeconds % 15 == 0 {
+            // Rotacionar mensagem motivacional no intervalo configurado
+            if settings?.showHonestyReminders == true,
+               elapsedSeconds > 0,
+               elapsedSeconds % Constants.honestyMessageRotationIntervalSeconds == 0 {
                 rotateMessage()
-            }
-        }
-        
-        // Update pomodoro
-        if pomodoroRunning && pomodoroTimeRemaining > 0 {
-            pomodoroTimeRemaining -= 1
-            
-            if pomodoroTimeRemaining == 0 {
-                pomodoroCompleted()
             }
         }
     }
@@ -707,35 +685,6 @@ struct FocusViewEnhanced: View {
         }
     }
     
-    private func startPomodoro() {
-        pomodoroTimeRemaining = (settings?.pomodoroDuration ?? 25) * 60
-        pomodoroRunning = true
-        
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.success)
-    }
-    
-    private func stopPomodoro() {
-        pomodoroRunning = false
-        pomodoroTimeRemaining = 0
-    }
-    
-    private func pomodoroCompleted() {
-        pomodoroRunning = false
-        
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.success)
-        
-        // Pausa longa
-        isPausing = true
-    }
-    
-    private func formatPomodoroTime(_ seconds: Int) -> String {
-        let mins = seconds / 60
-        let secs = seconds % 60
-        return String(format: "%02d:%02d", mins, secs)
-    }
-    
     private func formatTime(_ seconds: Int) -> String {
         let mins = seconds / 60
         let secs = seconds % 60
@@ -747,8 +696,8 @@ struct FocusViewEnhanced: View {
     
     private func checkAchievements() {
         let completedTasks = allTasks.filter { $0.isCompleted }
-        let streak = calculateStreak(from: completedTasks)
-        
+        let streak = StreakCalculator.streak(from: completedTasks)
+
         let manager = AchievementManager()
         let unlocked = manager.checkAndUnlockAchievements(
             achievements: achievements,
@@ -756,36 +705,13 @@ struct FocusViewEnhanced: View {
             streak: streak,
             context: modelContext
         )
-        
+
         if !unlocked.isEmpty {
             newAchievements = unlocked
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Constants.achievementToastDelaySeconds) {
                 showAchievementToast = true
             }
         }
-    }
-    
-    private func calculateStreak(from tasks: [StudyTaskSD]) -> Int {
-        let calendar = Calendar.current
-        let completedDates = tasks.compactMap { $0.completedAt }
-            .map { calendar.startOfDay(for: $0) }
-            .sorted(by: >)
-        
-        guard !completedDates.isEmpty else { return 0 }
-        
-        var streak = 0
-        var currentDate = calendar.startOfDay(for: Date())
-        
-        for date in completedDates {
-            if calendar.isDate(date, inSameDayAs: currentDate) {
-                streak += 1
-                currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate)!
-            } else if date < currentDate {
-                break
-            }
-        }
-        
-        return streak
     }
     
     private func dismissAchievement() {
