@@ -18,7 +18,13 @@ struct Clarity: App {
             Achievement.self,
             AppSettings.self
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        
+        // Store em disco em Application Support (persiste ao encerrar o app)
+        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        let clarityDir = appSupport.appendingPathComponent("Clarity", isDirectory: true)
+        try? FileManager.default.createDirectory(at: clarityDir, withIntermediateDirectories: true)
+        let storeURL = clarityDir.appendingPathComponent("default.store")
+        let modelConfiguration = ModelConfiguration(schema: schema, url: storeURL)
         
         do {
             let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
@@ -51,30 +57,13 @@ struct Clarity: App {
             
             return container
         } catch {
-            // Fallback: container em memória (dados temporários) se persistência falhar
-            let fallbackConfig = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-            do {
-                let fallbackContainer = try ModelContainer(for: schema, configurations: [fallbackConfig])
-                
-                // Inicializar dados padrão no container temporário
-                let context = fallbackContainer.mainContext
-                for category in Category.defaultCategories {
-                    context.insert(category)
-                }
-                let achievementManager = AchievementManager()
-                achievementManager.initializeAchievements(context: context)
-                _ = AppSettings.getOrCreate(context: context)
-                try? context.save()
-                
-                return fallbackContainer
-            } catch {
-                fatalError("App não pode iniciar. Delete e reinstale o app.")
-            }
+            // Sem fallback em memória: evita perder dados ao reabrir o app
+            fatalError("Não foi possível carregar os dados do app: \(error.localizedDescription). Tente reinstalar o app.")
         }
     }()
     
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
-    
+
     var body: some Scene {
         WindowGroup {
             if hasSeenOnboarding {
@@ -86,5 +75,6 @@ struct Clarity: App {
             }
         }
         .modelContainer(sharedModelContainer)
+        // Live Activity: não encerrar ao minimizar; só é encerrada ao sair da tela de foco (FocusViewEnhanced.onDisappear) ou ao concluir/parar a tarefa.
     }
 }
