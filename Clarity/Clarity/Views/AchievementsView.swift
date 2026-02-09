@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import Combine
 
 struct AchievementsView: View {
     @Environment(\.dismiss) private var dismiss

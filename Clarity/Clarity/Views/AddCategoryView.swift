@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import Combine
 
 struct AddCategoryView: View {
     @Environment(\.dismiss) private var dismiss
@@ -22,7 +23,7 @@ struct AddCategoryView: View {
     private var effectiveIcon: String {
         if useEmojiForIcon, !iconInput.trimmingCharacters(in: .whitespaces).isEmpty {
             let trimmed = iconInput.trimmingCharacters(in: .whitespaces)
-            if trimmed.count <= 4, trimmed.allSatisfy({ $0.isEmoji }) {
+            if trimmed.count <= 4, trimmed.allSatisfy({ $0.isEmojiApprox }) {
                 return trimmed
             }
         }
@@ -74,7 +75,7 @@ struct AddCategoryView: View {
                 
                 Section {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 44))], spacing: 12) {
-                        ForEach(Category.presetColors, id: \.hex) { preset in
+                        ForEach(Category.presetColors, id: \.name) { preset in
                             Button {
                                 selectedColorHex = preset.hex
                             } label: {
@@ -125,3 +126,26 @@ struct AddCategoryView: View {
         dismiss()
     }
 }
+
+// MARK: - Emoji approximation helper
+private extension Character {
+    // Approximate emoji detection using Unicode scalar properties.
+    // This is not perfect, but works well for most emoji, including flags and keycaps.
+    var isEmojiApprox: Bool {
+        // If any scalar has the emoji property, treat as emoji
+        if unicodeScalars.contains(where: { $0.properties.isEmoji }) {
+            return true
+        }
+        // Some composed emoji may not flag the base scalar; check common ranges
+        // Variation Selector-16 (U+FE0F) forces emoji presentation
+        if unicodeScalars.contains(where: { $0.value == 0xFE0F }) {
+            return true
+        }
+        // Zero Width Joiner compositions
+        if unicodeScalars.contains(where: { $0.value == 0x200D }) {
+            return true
+        }
+        return false
+    }
+}
+
