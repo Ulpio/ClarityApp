@@ -12,13 +12,15 @@ import SwiftData
 struct BreatheView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    /// Se true, a view se dispensa ao completar/pular (padrão). Se false, só chama os callbacks (ex.: quando embutida em BreatheThenFocusView).
+    var dismissOnComplete: Bool = true
     let onComplete: () -> Void
     let onSkip: (() -> Void)?
     
     @State private var isAnimating = false
     @State private var scale: CGFloat = 0.85
     @State private var phase: BreathePhase = .inhale
-    @State private var secondsRemaining = 30
+    @State private var secondsRemaining = 15
     @State private var showSkipConfirmation = false
     
     private let breatheTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -47,10 +49,10 @@ struct BreatheView: View {
         
         var duration: Double {
             switch self {
-            case .inhale: return 4.0
+            case .inhale: return 5.0
             case .hold: return 2.0
-            case .exhale: return 4.0
-            case .rest: return 2.0
+            case .exhale: return 5.0
+            case .rest: return 3.0
             }
         }
         
@@ -197,11 +199,9 @@ struct BreatheView: View {
             
             phase = phase.next()
             
-            // Haptic feedback at phase transition
-            if phase == .inhale || phase == .exhale {
-                let generator = UIImpactFeedbackGenerator(style: .soft)
-                generator.impactOccurred()
-            }
+            // Vibração mais perceptível a cada troca de fase (Inspire, Segure, Expire, Descanse)
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
             
             animatePhase()
         }
@@ -210,27 +210,23 @@ struct BreatheView: View {
     private func completeBreathing() {
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.success)
-        
-        dismiss()
+        if dismissOnComplete { dismiss() }
         onComplete()
     }
-    
+
     private func skipBreathing() {
-        let settings = AppSettings.getOrCreate(context: modelContext)
-        settings.totalBreathesSkipped += 1
-        try? modelContext.save()
-        
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.warning)
-        
-        dismiss()
-        
-        // Chamar callback de skip se fornecido
+        if dismissOnComplete { dismiss() }
         onSkip?()
-        
-        // Ou callback normal
         if onSkip == nil {
             onComplete()
+        }
+        // Atualizar contador após o callback (evita re-render do pai antes de showFocus = true)
+        DispatchQueue.main.async {
+            let settings = AppSettings.getOrCreate(context: modelContext)
+            settings.totalBreathesSkipped += 1
+            try? modelContext.save()
         }
     }
 }
