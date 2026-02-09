@@ -7,21 +7,31 @@
 
 import SwiftUI
 import SwiftData
+import Combine
+
+/// Wrapper para usar StudyTaskSD em .sheet(item:) / .fullScreenCover(item:) sem conformar o modelo a Identifiable (evita conflito com @Model/PersistentModel).
+fileprivate struct TaskSheetItem: Identifiable, Equatable {
+    let task: StudyTaskSD
+    var id: UUID { task.id }
+    static func == (lhs: TaskSheetItem, rhs: TaskSheetItem) -> Bool { lhs.id == rhs.id }
+}
 
 struct HomeViewSD: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \StudyTaskSD.createdAt, order: .reverse) private var allTasks: [StudyTaskSD]
     @Query(sort: \Category.order) private var categories: [Category]
-    
+
     @State private var showingCreateTask = false
-    @State private var createdTask: StudyTaskSD?
-    @State private var taskToStart: StudyTaskSD?
+    @State private var createdTaskItem: TaskSheetItem?
+    @State private var taskToStartItem: TaskSheetItem?
+    @StateObject private var coverSessionState = CoverSessionState()
     @State private var selectedCategory: Category?
     @State private var showStats = false
     @State private var showTemplates = false
     @State private var showAchievements = false
     @State private var showSettings = false
-    
+    @State private var showQuickFocus = false
+
     private var filteredTasks: [StudyTaskSD] {
         if let category = selectedCategory {
             return allTasks.filter { $0.category?.id == category.id }
@@ -31,12 +41,15 @@ struct HomeViewSD: View {
     
     var body: some View {
         NavigationStack {
-            ZStack {
-                if allTasks.isEmpty {
-                    emptyStateView
-                } else {
-                    taskListView
+            VStack(spacing: 0) {
+                ZStack {
+                    if allTasks.isEmpty {
+                        emptyStateView
+                    } else {
+                        taskListView
+                    }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .navigationTitle("Clarity")
             .toolbar {
@@ -113,34 +126,61 @@ struct HomeViewSD: View {
                 }
                 
                 ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        showingCreateTask = true
-                    } label: {
-                        Label("Criar tarefa", systemImage: "plus.circle.fill")
-                            .symbolRenderingMode(.hierarchical)
+                    HStack(spacing: 12) {
+                        Button {
+                            showQuickFocus = true
+                        } label: {
+                            Image(systemName: "timer")
+                                .symbolRenderingMode(.hierarchical)
+                        }
+                        .accessibilityLabel("Atividade rápida")
+
+                        Button {
+                            showingCreateTask = true
+                        } label: {
+                            Label("Criar tarefa", systemImage: "plus.circle.fill")
+                                .symbolRenderingMode(.hierarchical)
+                        }
+                        .accessibilityLabel("Criar nova tarefa de estudo")
                     }
-                    .accessibilityLabel("Criar nova tarefa de estudo")
                 }
+            }
+            .fullScreenCover(isPresented: $showQuickFocus) {
+                QuickFocusView()
+                    .environment(\.modelContext, modelContext)
             }
             .sheet(isPresented: $showingCreateTask) {
                 CreateTaskViewSD(onCreate: { task in
                     showingCreateTask = false
-                    createdTask = task
+                    createdTaskItem = TaskSheetItem(task: task)
                 })
             }
-            .sheet(item: $createdTask) { task in
+            .sheet(item: $createdTaskItem) { item in
                 TaskReadyView(
-                    task: task,
+                    task: item.task,
                     onStart: {
-                        taskToStart = task
-                        createdTask = nil
+                        createdTaskItem = nil
+                        let taskToStart = item.task
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                            taskToStartItem = TaskSheetItem(task: taskToStart)
+                        }
                     },
-                    onBack: { createdTask = nil }
+                    onBack: { createdTaskItem = nil }
                 )
             }
-            .fullScreenCover(item: $taskToStart) { task in
-                BreatheThenFocusView(task: task, onDismiss: { taskToStart = nil })
-                    .environment(\.modelContext, modelContext)
+            .fullScreenCover(item: $taskToStartItem) { item in
+                BreatheThenFocusView(
+                    coverState: coverSessionState,
+                    task: item.task,
+                    onDismiss: {
+                        taskToStartItem = nil
+                        coverSessionState.showFocus = false
+                    }
+                )
+                .environment(\.modelContext, modelContext)
+            }
+            .onChange(of: taskToStartItem) { _, newItem in
+                if newItem != nil { coverSessionState.showFocus = false }
             }
             .sheet(isPresented: $showStats) {
                 StatsView(tasks: allTasks)
@@ -220,7 +260,7 @@ struct HomeViewSD: View {
         }
         .padding()
     }
-    
+
     private var taskListView: some View {
         ScrollView {
             VStack(spacing: 20) {
@@ -240,8 +280,8 @@ struct HomeViewSD: View {
                 
                 // Tasks
                 LazyVStack(spacing: 16) {
-                    ForEach(filteredTasks) { task in
-                        TaskCardSD(task: task)
+                    ForEach(filteredTasks, id: \.id) { task in
+                        TaskCardSD(task: task, taskToStartItem: $taskToStartItem)
                             .transition(.asymmetric(
                                 insertion: .scale.combined(with: .opacity),
                                 removal: .opacity
@@ -254,14 +294,36 @@ struct HomeViewSD: View {
     }
 }
 
+/// Container para TaskReadyView quando aberta pela lista: ao tocar em "Iniciar", dispensa a tela e aciona o fullScreenCover da atividade.
+struct TaskReadyContainerView: View {
+    @Environment(\.dismiss) private var dismiss
+    let task: StudyTaskSD
+    @Binding fileprivate var taskToStartItem: TaskSheetItem?
+
+    var body: some View {
+        TaskReadyView(
+            task: task,
+            onStart: {
+                dismiss()
+                let taskToStart = task
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    taskToStartItem = TaskSheetItem(task: taskToStart)
+                }
+            },
+            onBack: { dismiss() }
+        )
+    }
+}
+
 struct TaskCardSD: View {
     @Environment(\.modelContext) private var modelContext
     let task: StudyTaskSD
+    @Binding fileprivate var taskToStartItem: TaskSheetItem?
     @State private var showDeleteAlert = false
-    
+
     var body: some View {
         NavigationLink {
-            FocusViewEnhanced(task: task)
+            TaskReadyContainerView(task: task, taskToStartItem: $taskToStartItem)
         } label: {
             VStack(alignment: .leading, spacing: 16) {
                 // Header com categoria
