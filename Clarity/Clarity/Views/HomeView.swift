@@ -22,17 +22,6 @@ struct HomeView: View {
             }
             .navigationTitle("Clarity")
             .toolbar {
-                #if DEBUG
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        store.clearAllData()
-                    } label: {
-                        Label("Limpar", systemImage: "trash")
-                    }
-                    .foregroundStyle(.red)
-                }
-                #endif
-                
                 ToolbarItem(placement: .primaryAction) {
                     Button {
                         showingCreateTask = true

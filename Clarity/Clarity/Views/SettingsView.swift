@@ -171,26 +171,6 @@ struct SettingsView: View {
                     Text("Acompanhe seu engajamento com as práticas de foco.")
                 }
                 
-                // About
-                Section {
-                    HStack {
-                        Text("Versão")
-                        Spacer()
-                        Text("2.0 (Enhanced)")
-                            .foregroundStyle(.secondary)
-                    }
-                    
-                    HStack {
-                        Text("Build")
-                        Spacer()
-                        Text("Fase 2 + Anti-Burla + Skip Tracking")
-                            .foregroundStyle(.secondary)
-                            .font(.caption)
-                    }
-                } header: {
-                    Text("Sobre")
-                }
-                
                 // Recommendations
                 Section {
                     VStack(alignment: .leading, spacing: 12) {
