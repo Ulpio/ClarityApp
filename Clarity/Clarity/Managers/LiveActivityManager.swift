@@ -27,12 +27,16 @@ class LiveActivityManager {
     ///   - currentStepIndex: Current step index
     ///   - elapsedSeconds: Elapsed time for current step
     /// - Returns: True if started successfully
+    /// - Note: No-op no Simulador para evitar erro "Failed to show Widget" (Live Activities não são suportadas corretamente no Simulador).
     @discardableResult
     func startActivity(
         for task: StudyTaskSD,
         currentStepIndex: Int,
         elapsedSeconds: Int = 0
     ) -> Bool {
+        #if targetEnvironment(simulator)
+        return false
+        #endif
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return false }
         if currentActivity != nil { endActivity() }
         

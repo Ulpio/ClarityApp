@@ -12,8 +12,7 @@ import SwiftUI
 @available(iOS 16.2, *)
 struct StudyLiveActivity: Widget {
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: StudyActivityAttributes.self) { context in
-            // Lock screen appearance
+        let config = ActivityConfiguration(for: StudyActivityAttributes.self) { context in
             StudyLiveActivityLockScreenView(context: context)
         } dynamicIsland: { context in
             DynamicIsland {
@@ -60,38 +59,35 @@ struct StudyLiveActivity: Widget {
                 }
                 
                 DynamicIslandExpandedRegion(.bottom) {
-                    HStack(spacing: 12) {
-                        // Progress bar
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                Text("Progresso")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
-                                Spacer()
-                                Text("\(Int(context.state.progress * 100))%")
-                                    .font(.caption2)
-                                    .fontWeight(.semibold)
-                                    .monospacedDigit()
-                            }
-                            
-                            GeometryReader { geometry in
-                                ZStack(alignment: .leading) {
-                                    RoundedRectangle(cornerRadius: 4)
-                                        .fill(Color.secondary.opacity(0.2))
-                                        .frame(height: 6)
-                                    
-                                    RoundedRectangle(cornerRadius: 4)
-                                        .fill(Color.blue)
-                                        .frame(
-                                            width: geometry.size.width * context.state.progress,
-                                            height: 6
-                                        )
-                                }
-                            }
-                            .frame(height: 6)
+                    VStack(alignment: .leading, spacing: 2) {
+                        HStack {
+                            Text("Progresso")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                            Text("\(Int(context.state.progress * 100))%")
+                                .font(.caption2)
+                                .fontWeight(.semibold)
+                                .monospacedDigit()
                         }
+                        GeometryReader { geometry in
+                            ZStack(alignment: .leading) {
+                                Rectangle()
+                                    .fill(Color.secondary.opacity(0.2))
+                                    .frame(height: 4)
+                                Rectangle()
+                                    .fill(Color.blue)
+                                    .frame(
+                                        width: max(0, geometry.size.width * context.state.progress),
+                                        height: 4
+                                    )
+                            }
+                        }
+                        .frame(height: 4)
                     }
-                    .padding(.top, 8)
+                    .padding(.horizontal, 0)
+                    .padding(.top, 2)
+                    .padding(.bottom, 0)
                 }
                 
                 DynamicIslandExpandedRegion(.center) {
@@ -126,12 +122,15 @@ struct StudyLiveActivity: Widget {
                         .foregroundStyle(.secondary)
                 }
             } minimal: {
-                // Minimal view (just icon)
                 Image(systemName: "book.fill")
                     .font(.caption2)
                     .foregroundStyle(.blue)
             }
         }
+        if #available(iOS 17.0, *) {
+            return config.contentMarginsDisabled()
+        }
+        return config
     }
 }
 
@@ -189,31 +188,29 @@ struct StudyLiveActivityLockScreenView: View {
             }
             
             // Progress bar
-            HStack(spacing: 8) {
+            HStack(spacing: 6) {
                 GeometryReader { geometry in
                     ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: 4)
+                        Rectangle()
                             .fill(Color.secondary.opacity(0.2))
-                            .frame(height: 6)
-                        
-                        RoundedRectangle(cornerRadius: 4)
+                            .frame(height: 4)
+                        Rectangle()
                             .fill(Color.blue)
                             .frame(
-                                width: geometry.size.width * context.state.progress,
-                                height: 6
+                                width: max(0, geometry.size.width * context.state.progress),
+                                height: 4
                             )
                     }
                 }
-                .frame(height: 6)
-                
+                .frame(height: 4)
                 Text("\(Int(context.state.progress * 100))%")
                     .font(.caption2)
                     .fontWeight(.semibold)
                     .monospacedDigit()
-                    .frame(width: 40, alignment: .trailing)
+                    .frame(width: 36, alignment: .trailing)
             }
         }
-        .padding(16)
+        .padding(10)
         .activityBackgroundTint(Color.black.opacity(0.3))
         .activitySystemActionForegroundColor(.white)
     }
